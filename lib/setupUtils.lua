@@ -37,22 +37,20 @@ function M.getPers(requiredPers)
         end
         
         table.insert(wrappedPers[perName], per)
-
+        
     end
     
     print("\n- Wrapped Peripherals:\n")
     textutils.tabulate(unpack( pers ))
     print("\n")
     
---[[]
     if(#requiredPers > 0) then
         error(
             "\nMissing peripherals - " ..
             table.concat(requiredPers, ", ")
         )
     end
---]]
-
+    
     return wrappedPers
 end
 
