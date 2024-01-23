@@ -1,4 +1,4 @@
--- $ARGS|Fluid Number (1)|Fluid Name (Unnamed)|Is Host (true)|$ARGS
+-- $ARGS|Fluid Number (1)|Fluid Name (None)|$ARGS
 
 
 -- Libraries
@@ -12,8 +12,7 @@ local utils = require("/lua/lib/utils")
 -- Args
 local args = { ... }
 local fluidNum = tonumber(args[2]) or 1
-local fluidName = utils.urlDecode(args[3] or "Unnamed")
-local isHost = args[4] == "true"
+local fluidName = utils.urlDecode(args[3] or "None")
 
 
 -- Peripherals
@@ -70,33 +69,9 @@ function start()
         drawMain()
     }
     fluids = { setFluidArray }
-
-    --[[
-    local joinOrCreate = function()
-        network.joinOrCreate(isHost, deviceData,
-            function(devices)
-                fluids = utils.filterTable(devices, function(device, newDevices)
-                    for _,newDevice in ipairs(newDevices) do
-                        if newDevice.fluidNum == device.fluidNum then return false end
-                    end
-                    return true
-                end)
-                table.sort(fluids,
-                    function(a, b) return a.fluidNum > b.fluidNum end
-                )
-                drawHeader()
-                drawFooter()
-                drawMain()
-            end
-        )
-    end
-
-    parallel.waitForAny(joinOrCreate, await)
-    --]]
 end
 
 -- FluidController
-
 
 function await()
     while(true) do
