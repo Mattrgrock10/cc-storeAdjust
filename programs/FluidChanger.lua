@@ -66,15 +66,14 @@ function start()
     local setFluidArray = {
         fluidNum = {1,2,3,4,5,6},
         fluidName = {"None","Lava","Water","Oil","Redstone Acid","Slime"},
-        table.sort(fluids,
-            function(a, b) return a.fluidNum > b.fluidNum end
-        )
-        drawHeader()
-        drawFooter()
-        drawMain()
     }
+    table.sort(fluids,
+        function(a, b) return a.fluidNum > b.fluidNum end
+    )
     fluids = { setFluidArray }
-    parallel.waitForAny(joinOrCreate, await)
+    drawHeader()
+    drawFooter()
+    drawMain()
 end
 
 -- FluidController
