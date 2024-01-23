@@ -266,5 +266,4 @@ function drawFluids()
     end
 end
 
-setup.utilsWrapper(start)
-
+setup.utilsWrapper(start, modem, channel)
