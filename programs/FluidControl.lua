@@ -18,8 +18,8 @@ local fluidName = utils.urlDecode(args[2] or "None")
 local wrappedPers = setup.getPers({
     "monitor",
     "modem",
-    "redrouter_1",
-    "redrouter_2"
+    "redrouter_3",
+    "redrouter_4"
 })
 
 local monitor = setup.setupMonitor(
