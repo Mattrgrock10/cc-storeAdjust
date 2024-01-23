@@ -1,4 +1,4 @@
--- Fluid Changer
+-- $ARGS|Channel (10)|Fluid Number (1)|Fluid Name (Unnamed)|Destination Redstone Output (right)|Direction Redstone Output (left)|Moving Redstone Output (front)|Is Host (false)|$ARGS
 
 
 -- Libraries
