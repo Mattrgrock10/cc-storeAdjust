@@ -20,7 +20,8 @@ local wrappedPers = setup.getPers({
     "modem"
 })
 
-local rr1, rr2 = peripheral.find("redrouter")
+local rr1 = peripheral.wrap("redrouter_1")
+local rr2 = peripheral.wrap("redrouter_2")
 
 local monitor = setup.setupMonitor(
     wrappedPers.monitor[1], 0.5
