@@ -63,6 +63,7 @@ function start()
     drawHeader()
     drawFooter()
     drawMain()
+    parallel.waitForAny(await)
 end
 
 -- FluidController
