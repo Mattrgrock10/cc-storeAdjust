@@ -1,4 +1,4 @@
--- $ARGS|Channel (10)|Fluid Number (1)|Fluid Name (Unnamed)|Destination Redstone Output (right)|Direction Redstone Output (left)|Moving Redstone Output (front)|Is Host (false)|$ARGS
+-- $ARGS|Fluid Number (1)|Fluid Name (Unnamed)|Is Host (false)|$ARGS
 
 
 -- Libraries
@@ -12,24 +12,20 @@ local utils = require("/lua/lib/utils")
 
 -- Args
 local args = { ... }
-local channel = tonumber(args[1]) or 10
 local fluidNum = tonumber(args[2]) or 1
 local fluidName = utils.urlDecode(args[3] or "Unnamed")
-local destinationRedstoneOutput = args[4] or "right"
-local directionRedstoneOutput = args[5] or "left"
-local movingRedstoneOutput = args[6] or "front"
-local isHost = args[7] == "true"
+local isHost = args[4] == "true"
 
 
 -- Peripherals
 local wrappedPers = setup.getPers({
     "monitor",
-    "modem"
+    "redrouter_1",
+    "redrouter_2"
 })
 local monitor = setup.setupMonitor(
     wrappedPers.monitor[1], 0.5
 )
-local modem = wrappedPers.modem[1]
 
 -- Setup
 local fluids = {}
@@ -64,8 +60,21 @@ function start()
 
     fluids = { deviceData }
 
+    local setFluidArray = {
+        fluidNum = {1,2,3,4,5,6},
+        fluidName = {"None","Lava","Water","Oil","Redstone Acid","Slime"},
+        table.sort(fluids,
+            function(a, b) return a.fluidNum > b.fluidNum end
+        )
+        drawHeader()
+        drawFooter()
+        drawMain()
+    }
+    fluids = { setFluidArray }
+
+    --[[
     local joinOrCreate = function()
-        network.joinOrCreate(channel, isHost, deviceData,
+        network.joinOrCreate(isHost, deviceData,
             function(devices)
                 fluids = utils.filterTable(devices, function(device, newDevices)
                     for _,newDevice in ipairs(newDevices) do
@@ -84,8 +93,8 @@ function start()
     end
 
     parallel.waitForAny(joinOrCreate, await)
+    --]]
 end
-
 
 -- FluidController
 
@@ -96,7 +105,6 @@ function await()
         
         local isTouch = (event == "monitor_touch")
         
-        local isModemMessage = (event == "modem_message")
         
         if(isTouch) then
             local x = p2
@@ -105,19 +113,7 @@ function await()
             local fluidIndex = y - 4
             local fluid = fluids[fluidIndex]
             if(fluid and (fluidIndex) ~= currentFluidIndex) then
-                modem.transmit(channel, channel,
-                    {
-                         type = "fluidChange",
-                         fluidIndex = fluidIndex   
-                    }
-                )
                 moveTo(fluidIndex)
-                break
-            end
-        elseif(isModemMessage) then
-            local body = p4
-            if(body.type == "fluidChange") then
-                moveTo(body.fluidIndex)
                 break
             end
         end
@@ -135,22 +131,25 @@ function moveTo(fluidIndex)
     
     drawMain()
     
-    sendSignal(fluid.fluidrNum)
+    sendSignal(fluid.fluidNum)
 
     await()
 end
 
 function sendSignal(targetFluidNum)
-    redstone.setOutput(
-        destinationRedstoneOutput, fluidNum ~= targetFluidNum
-    )
-    redstone.setOutput(
-        directionRedstoneOutput, direction < 0
-    )
-    redstone.setOutput(
-        movingRedstoneOutput, moving
-    )
-    
+    if(fluid.fluidNum = 1) then
+        redrouter_1.setOutput(top, on)
+    else if(fluid.fluidNum = 2) then
+        redrouter_1.setOutput(left, on)
+    else if(fluid.fluidNum = 3) then
+        redrouter_1.setOutput(bottom, on)
+    else if(fluid.fluidNum = 4) then
+        redrouter_1.setOutput(right, on)
+    else if(fluid.fluidNum = 5) then
+        redrouter_1.setOutput(back, on)
+    else if(fluid.fluidNum = 6) then
+        redrouter_2.setOutput(right, on)
+    end
 end
 
 function updateState()
@@ -188,7 +187,6 @@ function drawFooter()
     )
     
     write(winFooter, "Select a fluid", 2, 3, "left")
-    write(winFooter, "Channel: " .. channel, 2, 3, "right" )
 end
 
 function drawMain()
@@ -256,22 +254,6 @@ function awaitFinish()
         
         local isRedstone = (event == "redstone")
         
-        local isModemMessage = (event == "modem_message")
-        
-        if(isRedstone) then
-            modem.transmit(channel, channel,
-                {
-                    type = "fluidChanged"
-                }
-            )
-            return
-        elseif(isModemMessage) then
-            local body = p4
-            if(body.type == "fluidChanged") then
-                return
-            end
-        end
-        
     end
 end
     
@@ -305,5 +287,5 @@ function drawFluids()
     end
 end
 
-setup.utilsWrapper(start, modem, channel)
+setup.utilsWrapper(start)
 
