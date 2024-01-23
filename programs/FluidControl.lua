@@ -17,10 +17,10 @@ local fluidName = utils.urlDecode(args[2] or "None")
 -- Peripherals
 local wrappedPers = setup.getPers({
     "monitor",
-    "modem",
-    "redrouter_1",
-    "redrouter_2"
+    "modem"
 })
+
+local rr1, rr2 = peripheral.find("redrouter")
 
 local monitor = setup.setupMonitor(
     wrappedPers.monitor[1], 0.5
@@ -107,17 +107,17 @@ end
 
 function sendSignal(targetFluidNum)
     if(fluid.fluidNum == 1) then
-        redrouter_1.setOutput(top, on)
+        rr1.setOutput(top, on)
     elseif(fluid.fluidNum == 2) then
-        redrouter_1.setOutput(left, on)
+        rr1.setOutput(left, on)
     elseif(fluid.fluidNum == 3) then
-        redrouter_1.setOutput(bottom, on)
+        rr1.setOutput(bottom, on)
     elseif(fluid.fluidNum == 4) then
-        redrouter_1.setOutput(right, on)
+        rr1.setOutput(right, on)
     elseif(fluid.fluidNum == 5) then
-        redrouter_1.setOutput(back, on)
+        rr1.setOutput(back, on)
     elseif(fluid.fluidNum == 6) then
-        redrouter_2.setOutput(right, on)
+        rr2.setOutput(right, on)
     end
 end
 
