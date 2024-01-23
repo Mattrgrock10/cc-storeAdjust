@@ -1,4 +1,4 @@
--- $ARGS|Fluid Number (1)|Fluid Name (None)|$ARGS
+-- $ARGS|Channel (1)|Fluid Number (1)|Fluid Name (None)|$ARGS
 
 
 -- Libraries
@@ -7,10 +7,12 @@ local monUtils = require("/lua/lib/monitorUtils")
 local write = monUtils.write
 local drawBox = monUtils.drawBox
 local stateHandler = require("/lua/lib/stateHandler")
+local network = require("/lua/lib/networkUtils")
 local utils = require("/lua/lib/utils")
 
 -- Args
 local args = { ... }
+local channel = tonumber(args[1]) or 1
 local fluidNum = tonumber(args[2]) or 1
 local fluidName = utils.urlDecode(args[3] or "None")
 
@@ -18,12 +20,15 @@ local fluidName = utils.urlDecode(args[3] or "None")
 -- Peripherals
 local wrappedPers = setup.getPers({
     "monitor",
+    "modem",
     "redrouter_1",
     "redrouter_2"
 })
+
 local monitor = setup.setupMonitor(
     wrappedPers.monitor[1], 0.5
 )
+local modem = wrappedPers.modem[1]
 
 -- Setup
 local fluids = {}
@@ -69,6 +74,7 @@ function start()
         drawMain()
     }
     fluids = { setFluidArray }
+    parallel.waitForAny(joinOrCreate, await)
 end
 
 -- FluidController
@@ -78,7 +84,7 @@ function await()
         local event, p1, p2, p3, p4, p5 = os.pullEvent()
         
         local isTouch = (event == "monitor_touch")
-        
+        local isModemMessage = (event == "modem_message")
         
         if(isTouch) then
             local x = p2
