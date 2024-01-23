@@ -60,10 +60,11 @@ function start()
         fluidName = {"None","Lava","Water","Oil","Redstone Acid","Slime"},
     }
     fluids = { setFluidArray }
+    parallel.waitForAny(await)
+    await()
     drawHeader()
     drawFooter()
     drawMain()
-    parallel.waitForAny(await)
 end
 
 -- FluidController
