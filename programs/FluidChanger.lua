@@ -1,4 +1,4 @@
--- $ARGS|Fluid Number (1)|Fluid Name (Unnamed)|Is Host (false)|$ARGS
+-- $ARGS|Fluid Number (1)|Fluid Name (Unnamed)|Is Host (true)|$ARGS
 
 
 -- Libraries
@@ -7,7 +7,6 @@ local monUtils = require("/lua/lib/monitorUtils")
 local write = monUtils.write
 local drawBox = monUtils.drawBox
 local stateHandler = require("/lua/lib/stateHandler")
-local network = require("/lua/lib/networkUtils")
 local utils = require("/lua/lib/utils")
 
 -- Args
