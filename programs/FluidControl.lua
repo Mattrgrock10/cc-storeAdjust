@@ -17,14 +17,12 @@ local fluidName = utils.urlDecode(args[2] or "None")
 -- Peripherals
 local wrappedPers = setup.getPers({
     "monitor",
-    "modem",
     "redrouter"
 })
 
 local monitor = setup.setupMonitor(
     wrappedPers.monitor[1], 0.5
 )
-local modem = wrappedPers.modem[1]
 
 -- Setup
 local fluids = {}
